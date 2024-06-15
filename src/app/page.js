@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import QRCode from "qrcode.react";
 import Head from "next/head";
+import Image from "next/image";
 
 const Page = () => {
   const [formData, setFormData] = useState({
@@ -21,14 +22,22 @@ const Page = () => {
 
   const qrRef = useRef(null);
 
-  // Ensure each field's data is appropriately padded
   const generateQRData = () => {
-    let qrDataString = "";
-    Object.entries(fieldLengths).forEach(([key, length]) => {
-      const value = formData[key] || "";
-      qrDataString += value.padEnd(length, " "); // Pad with spaces as per specified lengths
-    });
-    return qrDataString;
+    const qrDataParts = [
+      formData.challanNo.padEnd(12, " "),
+      formData.vendorCode.padEnd(10, " "),
+      formData.itemCode.padEnd(10, " "),
+      formData.moNo.padEnd(8, " "),
+      formData.poNo.padEnd(8, " "),
+      formData.family.padEnd(4, " "),
+      formData.calNc.padEnd(4, " "),
+      formData.spMp.padEnd(2, " "),
+      formData.characteristics.padEnd(2, " "),
+      formData.rating.padEnd(4, " "),
+      formData.special.padEnd(10, " "),
+      formData.challanQuantity.padEnd(6, " "),
+    ];
+    return qrDataParts.join("");
   };
 
   const handleChange = (e) => {
@@ -60,28 +69,18 @@ const Page = () => {
     }, 500);
   };
 
-  // Field lengths as specified
-  const fieldLengths = {
-    challanNo: 12,
-    vendorCode: 10,
-    itemCode: 10,
-    moNo: 8,
-    poNo: 8,
-    family: 4,
-    calNc: 4,
-    spMp: 2,
-    characteristics: 2,
-    rating: 4,
-    special: 10,
-    challanQuantity: 6,
-  };
-
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center text-black py-12">
       <Head>
         <title>Challan QR Code Generator</title>
       </Head>
-      <img src="/1.png" alt="Company Logo" className="w-48 mb-4" />
+      <Image
+        src="/1.png"
+        alt="Company Logo"
+        width={192}
+        height={192}
+        className="mb-4"
+      />
       <h1 className="text-4xl font-bold mb-6">Challan QR Code Generator</h1>
       <div className="bg-white shadow-md rounded-lg p-8 mb-6">
         <form className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -100,7 +99,7 @@ const Page = () => {
                 value={formData[key]}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                maxLength={fieldLengths[key]}
+                maxLength={12} // You can adjust maxLength based on the field if needed
               />
             </div>
           ))}
