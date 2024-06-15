@@ -77,7 +77,7 @@ const Page = () => {
       <Image
         src="/1.png"
         alt="Company Logo"
-        width={192}
+        width={250}
         height={192}
         className="mb-4"
       />
